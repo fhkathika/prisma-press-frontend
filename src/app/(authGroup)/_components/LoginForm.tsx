@@ -5,11 +5,14 @@ import { Card } from "@/components/ui/card"
 import { logingAction } from "../_actions/authActions"
 import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+
 
 
 
 const LoginForm = () => {
   const [state,action,pending]=useActionState(logingAction,false)
+  const router=useRouter()
   useEffect(()=>{
 if(!state) return
 if(state.success){

@@ -1,4 +1,8 @@
 "use server"
+
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+
 type loginState={
     success:true,
     statusCode:number,
@@ -19,7 +23,7 @@ const payload={
     email,
     password
 }
-const res=await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/login`,{
+const res=await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,{
     method:"POST",
     headers:{
         "Content-Type":"application/json"
@@ -28,5 +32,21 @@ const res=await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/login
 })
 const result=await res.json()
 console.log(result)
+if(result.success){
+    const cookieStore=await cookies()
+    cookieStore.set("accessToken",result.data.accessToken,{
+        httpOnly:true,
+        maxAge:60 *60 *24,
+        sameSite:"lax"
+
+    })
+    cookieStore.set("refreshToken",result.data.refreshToken,{
+        httpOnly:true,
+        maxAge:60 *60 *24 * 7,
+        sameSite:"lax"
+
+    })
+    redirect("/")
+}
 return result
 }

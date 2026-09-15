@@ -17,8 +17,14 @@ if(!accessToken){
 const res=await fetch(`${process.env.BACKEND_API_URL}/users/me`,{
     headers:{
 Cookie:`accessToken=${accessToken}`
-    }
+    },
+    cache: "force-cache",
+next:{
+    revalidate: 60 * 60 *24,
+    tags:["my-profile"]
+}
 })
+
 const result=res.json()
 console.log(result)
 }

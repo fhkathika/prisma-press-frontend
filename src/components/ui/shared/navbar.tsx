@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import logout from "../../../../service/logout"
 
 const navItems = [
   { label: "Overview", href: "#overview" },
@@ -24,14 +25,34 @@ type IUser={
 success:boolean,
 message:string,
 data:{
-
+profile:{
+     
+     
+            id: string,
+            name: string,
+            email: string,
+            role: string,
+            createdAt: string,
+            updatedAt: string,
+        
+    
 }
 }
-const NavbarProps={
+}
+type NavbarProps={
 user:IUser
 }
 
 export function Navbar({user}:NavbarProps) {
+ console.log(user.success,"success")
+  const handleUserMenuAction=async(action:string)=>{
+console.log(`user Menu action: ${action}`)
+
+ 
+  if(action ==="logout"){
+await logout()
+  }
+  }
   return (
     <header className="border-b bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -72,6 +93,7 @@ export function Navbar({user}:NavbarProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+
               <DropdownMenuItem>
                 <User data-icon="inline-start" />
                 Profile
@@ -86,7 +108,12 @@ export function Navbar({user}:NavbarProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem variant="destructive"
+            onClick={async()=>{
+              
+               await handleUserMenuAction("logout")}
+              }
+            >
               <LogOut data-icon="inline-start" />
               Log out
             </DropdownMenuItem>

@@ -20,8 +20,18 @@ const navItems = [
   { label: "Resources", href: "#resources" },
   { label: "Documentation", href: "#documentation" },
 ]
+type IUser={
+success:boolean,
+message:string,
+data:{
 
-export function Navbar() {
+}
+}
+const NavbarProps={
+user:IUser
+}
+
+export function Navbar({user}:NavbarProps) {
   return (
     <header className="border-b bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -56,8 +66,8 @@ export function Navbar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuGroup>
               <DropdownMenuLabel>
-                <p>Jordan Davis</p>
-                <p className="font-normal text-muted-foreground">jordan@example.com</p>
+                <p>{user?.data?.profile?.name || "Name"} </p>
+                <p className="font-normal text-muted-foreground">{user?.data?.profile?.email || "Email"}</p>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

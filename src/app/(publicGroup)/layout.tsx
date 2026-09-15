@@ -2,7 +2,7 @@ import { Navbar } from '@/components/ui/shared/navbar'
 import React from 'react'
 import { getMe } from '../../../service/getMe'
 
-const AuthLayout = ({children}:{children:React.ReactNode}) => {
+const PublicLayout = ({children}:{children:React.ReactNode}) => {
   const user=getMe()
   return (
     <div className='max-w-7xl mx-auto '>
@@ -12,4 +12,4 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
   )
 }
 
-export default AuthLayout
+export default PublicLayout

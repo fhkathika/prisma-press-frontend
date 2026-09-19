@@ -1,6 +1,4 @@
 "use server"
-
-
 import { cookies } from "next/headers";
 
 export const getMe=async()=>{
@@ -11,12 +9,16 @@ if(!accessToken){
     // throw new Error("User not Logged In")
     return {
         success:false,
-        message:"User not Logged In"
+        message:"User not Logged In",
+        data:null
+        
     }
 }
-const res=await fetch(`${process.env.BACKEND_API_URL}/users/me`,{
+const res=await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`,{
     headers:{
-Cookie:`accessToken=${accessToken}`
+Cookie:`accessToken=${accessToken}`,
+Authorization: `Bearer ${accessToken}`
+            
     },
     cache: "force-cache",
 next:{
@@ -25,6 +27,7 @@ next:{
 }
 })
 
-const result=res.json()
-console.log(result)
+const result=await res.json()
+// console.log("result",result)
+return result
 }

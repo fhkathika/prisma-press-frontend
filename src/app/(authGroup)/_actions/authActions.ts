@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import  jwt, { JwtPayload }  from "jsonwebtoken"
 
 type loginState={
     success:true,
@@ -14,8 +15,8 @@ type loginState={
 }
 
 export const logingAction=async(prevState:loginState,formData:FormData)=>{
-console.log(formData)
-console.log(prevState)
+// console.log(formData)
+// console.log(prevState)
 
 const email=formData.get("email")
 const password=formData.get("password")
@@ -31,8 +32,8 @@ const res=await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,{
     body:JSON.stringify(payload)
 })
 const result=await res.json()
-console.log(result)
-if(result.success){
+// console.log(result)
+if(res.ok){
     const cookieStore=await cookies()
     cookieStore.set("accessToken",result.data.accessToken,{
         httpOnly:true,
@@ -46,7 +47,19 @@ if(result.success){
         sameSite:"lax"
 
     })
-    redirect("/")
+  
+    const decodedToken=jwt.decode(result?.data?.accessToken) as JwtPayload 
+    console.log("decodedToken",decodedToken)
+//   redirect("/")
+if(decodedToken?.role==="ADMIN"){
+    redirect("/admin-dashboard")
+}
+else if(decodedToken?.role==="PROVIDER"){
+    redirect("/author-dashboard")
+}
+else if(decodedToken?.role==="CUSTOMER"){
+    redirect("/dashboard")
+}
 }
 return result
 }

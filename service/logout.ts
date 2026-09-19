@@ -1,6 +1,7 @@
+"use server"
 import { cookies } from 'next/headers'
 import { revalidateTag } from 'next/cache'
-import React from 'react'
+
 
 const logout = async() => {
     const cookiesStore=await cookies();

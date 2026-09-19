@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link"
 import { ChevronDown, CreditCard, LogOut, Settings, User } from "lucide-react"
 
@@ -12,6 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import logout from "../../../../service/logout"
+import { useEffect, useState } from "react"
+
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 const navItems = [
   { label: "Overview", href: "#overview" },
@@ -25,17 +30,13 @@ type IUser={
 success:boolean,
 message:string,
 data:{
-profile:{
-     
-     
-            id: string,
+user:{
+      id: string,
             name: string,
             email: string,
             role: string,
             createdAt: string,
-            updatedAt: string,
-        
-    
+            updatedAt: string,   
 }
 }
 }
@@ -44,15 +45,20 @@ user:IUser
 }
 
 export function Navbar({user}:NavbarProps) {
- console.log(user.success,"success")
+ console.log("user",user?.success)
+ const router=useRouter()
   const handleUserMenuAction=async(action:string)=>{
-console.log(`user Menu action: ${action}`)
+
 
  
   if(action ==="logout"){
 await logout()
+toast.success("user logged out successfully")
+router.push("/login")
   }
   }
+
+ 
   return (
     <header className="border-b bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -72,8 +78,10 @@ await logout()
             ))}
           </nav>
         </div>
-
-        <DropdownMenu>
+{
+  user?
+  (
+   <DropdownMenu>
           <DropdownMenuTrigger
             aria-label="Open user menu"
             className="flex items-center gap-2 rounded-md p-1.5 outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
@@ -81,14 +89,14 @@ await logout()
             <Avatar size="sm">
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
-            <span className="hidden text-sm font-medium sm:inline">Jordan Davis</span>
+            <span className="hidden text-sm font-medium sm:inline">{user?.data?.user?.name}</span>
             <ChevronDown aria-hidden="true" className="hidden size-4 text-muted-foreground sm:inline" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuGroup>
               <DropdownMenuLabel>
-                <p>{user?.data?.profile?.name || "Name"} </p>
-                <p className="font-normal text-muted-foreground">{user?.data?.profile?.email || "Email"}</p>
+                <p>{user?.data?.user?.name || "Name"} </p>
+                <p className="font-normal text-muted-foreground">{user?.data?.user?.email || "Email"}</p>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -119,6 +127,13 @@ await logout()
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+  )
+        :
+        <Link href={"/login"}>
+          Login
+        </Link>
+}
+       
       </div>
     </header>
   )
